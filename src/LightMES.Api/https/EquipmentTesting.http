@@ -1,0 +1,47 @@
+@LightMES.Api_HostAddress = https://localhost:9000
+@group = /api/equipments
+@contentType = application/json
+###
+POST {{LightMES.Api_HostAddress}}{{group}}
+Content-Type: {{contentType}}
+{
+  "equipmentCode": "EQ-CNC-001",
+  "equipmentName": "CNC加工中心 #1",
+  "location" :"A车间-01区",
+  "description": "主要用于箱体类零件的高精度加工"
+}
+
+###
+POST {{LightMes.Api_HostAddress}}{{group}}
+Content-Type: {{contentType}}
+{
+  "equipmentCode": "EQ-CNC-001",
+  "equipmentName": "另一台CNC",
+  "location" :"A车间-02区"
+}
+###
+POST {{LightMes.Api_HostAddress}}{{group}}
+Content-Type: {{contentType}}
+{
+  "equipmentCode": "",
+  "equipmentName": ""
+}
+
+###
+GET {{LightMes.Api_HostAddress}}{{group}}?PageNumber=1&PageSize=10
+Accept: {{contentType}}
+
+###
+@equipmentId = f1716688-8058-4738-983b-c94aa94cf42e
+GET {{LightMes.Api_HostAddress}}{{group}}/{{equipmentId}}
+Accept: {{contentType}}
+
+###
+PUT {{LightMes.Api_HostAddress}}{{group}}/{{equipmentId}}
+Content-Type: {{contentType}}
+{
+  "id" : "{{equipmentId}}",
+  "equipmentName": "CNC加工中心 #1 (已升级主轴)",
+  "location": "A车间-01区-新位置",
+  "description": "主轴转速已升级至 12000 RPM"
+}

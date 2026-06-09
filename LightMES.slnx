@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LightMES.Api/LightMES.Api.csproj" />
+    <Project Path="src/LightMES.Application/LightMES.Application.csproj" />
+    <Project Path="src/LightMES.Domain/LightMES.Domain.csproj" />
+    <Project Path="src/LightMES.Infrastructure/LightMES.Infrastructure.csproj" />
+    <Project Path="src/LightMES.Tests/LightMES.Tests.csproj" />
+  </Folder>
+</Solution>

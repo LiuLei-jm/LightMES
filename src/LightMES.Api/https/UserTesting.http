@@ -1,0 +1,102 @@
+@LightMES.Api_HostAddress = https://localhost:9000
+@Group = /api/users
+
+@userId = fb69ddda-d9f8-482b-a54c-1c672815cb4a
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6Ijg2YzM5ODZiLTBhYWMtNDdhNy1iMGEzLWQ4MjBiNjQ2NjQxMCIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJhZG1pbiIsImZ1bGxfbmFtZSI6IkFkbWluaXN0cmF0b3IiLCJqdGkiOiI5YzVlYWE2ZS1kMWI5LTRlZTItODlmNi1kYzQyYmYyZTI3MzQiLCJleHAiOjE3ODA5NDY2MjYsImlzcyI6IkxpZ2h0TUVTIiwiYXVkIjoiTUVTX0NsaWVudHMifQ.sbQK6DXW76xwQy3tz4IB7GqCMQF01DobCLoxAeNhb0k
+@Token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImZiNjlkZGRhLWQ5ZjgtNDgyYi1hNTRjLTFjNjcyODE1Y2I0YSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL25hbWUiOiJvcGVyYXRvcjAyIiwiZnVsbF9uYW1lIjoi5LiA57q_5pON5L2c5ZGY5byg5LiJIiwianRpIjoiNzlhYjcxZmUtMGViNS00Mjk1LWE4NGYtYWM4NWFjNzUxMDhlIiwiZXhwIjoxNzgwOTQ2MTM0LCJpc3MiOiJMaWdodE1FUyIsImF1ZCI6Ik1FU19DbGllbnRzIn0.WSpnCV-7yBDdRyqsVP-oYim59YXo5DcuKF8-NDRUElk
+POST {{LightMES.Api_HostAddress}}{{Group}}/register
+Authorization : Bearer {{Token}}
+Content-Type: application/json
+{
+  "username": "operator02",
+  "password": "Password123!",
+  "fullName": "一线操作员张三",
+  "EmployeeNo": "20260603002",
+  "Role": "Operator",
+  "Creator": "李四"
+}
+
+###
+
+POST {{LightMES.Api_HostAddress}}{{Group}}/register
+Authorization : Bearer {{Token}}
+Content-Type: application/json
+{
+  "username": "operator01",
+  "password": "123",
+  "fullName": "重复的张三",
+  "EmployeeNo": "20260603002",
+  "role": "Operator"
+}
+
+###
+POST {{LightMES.Api_HostAddress}}{{group}}/login
+Content-Type: application/json
+{
+  "username": "operator02",
+  "password": "88888888"
+}
+###
+POST {{LightMES.Api_HostAddress}}{{group}}/login
+Content-Type: application/json
+{
+  "username": "admin",
+  "password": "lightMES@666"
+}
+###
+PUT {{LightMES.Api_HostAddress}}{{group}}/{{userId}}
+Authorization : Bearer {{Token}}
+Content-Type: application/json
+{
+  "id": "{{userId}}",
+  "fullName": "王五",
+  "employeeNo": "20260603002",
+  "badgeNo": "card002",
+  "role": "Operator",
+  "modifiedBy": "王五"
+}
+###
+PUT {{LightMES.Api_HostAddress}}{{group}}/me/changepassword
+Authorization : Bearer {{Token}}
+Content-Type: application/json
+{
+  "oldPassword": "Password123!",
+  "newPassword": "1234qwer!"
+}
+
+###
+PUT {{LightMES.Api_HostAddress}}{{group}}/{{userId}}/resetpassword
+Authorization : Bearer {{adminToken}}
+Content-Type: application/json
+
+"12354"
+
+###
+GET {{LightMES.Api_HostAddress}}{{group}}/
+
+###
+
+GET {{LightMES.Api_HostAddress}}{{group}}/{{userId}}
+
+###
+
+DELETE {{LightMES.Api_HostAddress}}{{group}}/{{userId}}
+Content-Type: application/json
+{
+  "id": "{{userId}}",
+  "modifiedBy": "admin"
+}
+
+###
+
+PATCH {{LightMES.Api_HostAddress}}{{group}}/{{userId}}/status
+Accept: */*
+Content-Type: application/json 
+
+true
+
+###
+
+
+GET {{LightMES.Api_HostAddress}}{{group}}/roles
+
