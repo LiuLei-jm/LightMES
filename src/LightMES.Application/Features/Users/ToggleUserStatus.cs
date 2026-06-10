@@ -12,12 +12,12 @@ public record ToggleUserStatusCommand(
     public string RequiredPermission => Permissions.Users.ToggleStatus;
 }
 
-public class ToggleUserStatusHandler : IRequestHandler<ToggleUserStatusCommand, bool>
+public class ToggleUserStatusCommandHandler : IRequestHandler<ToggleUserStatusCommand, bool>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUserService _currentUserService;
 
-    public ToggleUserStatusHandler(IAppDbContext context, ICurrentUserService currentUserService)
+    public ToggleUserStatusCommandHandler(IAppDbContext context, ICurrentUserService currentUserService)
     {
         _context = context;
         _currentUserService = currentUserService;

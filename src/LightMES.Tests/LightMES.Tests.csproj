@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -11,6 +12,9 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="FluentAssertions" Version="8.10.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.27" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.27" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="NSubstitute" Version="5.3.0" />
     <PackageReference Include="xunit" Version="2.5.3" />
@@ -19,7 +23,24 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LightMES.Application\LightMES.Application.csproj" />
+    <ProjectReference Include="..\LightMES.Infrastructure\LightMES.Infrastructure.csproj" />
+    <ProjectReference Include="..\LightMES.Api\LightMES.Api.csproj" />
   </ItemGroup>
+
+  <!-- Copy the API project's deps.json into the test output so WebApplicationFactory can locate it -->
+  <ItemGroup>
+    <None Update="..\LightMES.Api\bin\$(Configuration)\net8.0\*.deps.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <Target Name="CopyApiDepsAsTesthost" AfterTargets="Build">
+    <PropertyGroup>
+      <ApiDepsSource>..\LightMES.Api\bin\$(Configuration)\net8.0\LightMES.Api.deps.json</ApiDepsSource>
+      <ApiDepsDest>$(OutputPath)testhost.deps.json</ApiDepsDest>
+    </PropertyGroup>
+    <Copy Condition="Exists('$(ApiDepsSource)')" SourceFiles="$(ApiDepsSource)" DestinationFiles="$(ApiDepsDest)" SkipUnchangedFiles="true" />
+  </Target>
 
   <ItemGroup>
     <Using Include="Xunit" />

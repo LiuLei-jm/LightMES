@@ -23,7 +23,7 @@ public static class UserEndpoints
                 return Results.BadRequest(ex.Message);
             }
         }).WithName("Register").WithSummary("注册用户");
-        group.MapPost("/login", async ([FromBody] LoginRequest request, ISender sender) =>
+        group.MapPost("/login", async ([FromBody] LoginUserCommand request, ISender sender) =>
         {
             var result = await sender.Send(request);
             return result.Success ? Results.Ok(result) : Results.Json(result, statusCode: 401);

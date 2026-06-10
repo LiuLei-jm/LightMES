@@ -11,20 +11,20 @@ public record ResetUserPasswordCommand(Guid TargetUserId, string? NewPassword = 
     public string NewPassword { get; init; } = string.IsNullOrWhiteSpace(NewPassword) ? "88888888" : NewPassword;
     public string RequiredPermission => Permissions.Users.ChangePassword;
 }
-public class ResetUserPasswordValidator : AbstractValidator<ResetUserPasswordCommand>
+public class ResetUserPasswordCommandValidator : AbstractValidator<ResetUserPasswordCommand>
 {
-    public ResetUserPasswordValidator()
+    public ResetUserPasswordCommandValidator()
     {
         RuleFor(x => x.NewPassword).MinimumLength(6).WithMessage("密码最小保持6位");
     }
 }
-public class ResetUserPasswordHandler : IRequestHandler<ResetUserPasswordCommand, Unit>
+public class ResetUserPasswordCommandHandler : IRequestHandler<ResetUserPasswordCommand, Unit>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ICurrentUserService _currentUserService;
 
-    public ResetUserPasswordHandler(IAppDbContext context, IPasswordHasher passwordHasher, ICurrentUserService currentUserService)
+    public ResetUserPasswordCommandHandler(IAppDbContext context, IPasswordHasher passwordHasher, ICurrentUserService currentUserService)
     {
         _context = context;
         _passwordHasher = passwordHasher;

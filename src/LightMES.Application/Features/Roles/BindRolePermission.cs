@@ -18,11 +18,11 @@ public class BindRolePermissionCommandValidator : AbstractValidator<BindRolePerm
             .WithMessage(x => $"Permission '{x.Permission}' is invalid. Please use a defined system permission.");
     }
 }
-public class BindRolePermissionHandler : IRequestHandler<BindRolePermissionCommand, Unit>
+public class BindRolePermissionCommandHandler : IRequestHandler<BindRolePermissionCommand, Unit>
 {
     private readonly IAppDbContext _context;
 
-    public BindRolePermissionHandler(IAppDbContext context)
+    public BindRolePermissionCommandHandler(IAppDbContext context)
     {
         _context = context;
     }

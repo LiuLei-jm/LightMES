@@ -7,11 +7,11 @@ namespace LightMES.Application.Features.Roles;
 
 public record GetRolesQuery : IRequest<List<RoleDto>>;
 
-public class GetRolesHandler : IRequestHandler<GetRolesQuery, List<RoleDto>>
+public class GetRolesQueryHandler : IRequestHandler<GetRolesQuery, List<RoleDto>>
 {
     private readonly IAppDbContext _context;
 
-    public GetRolesHandler(IAppDbContext context)
+    public GetRolesQueryHandler(IAppDbContext context)
     {
         _context = context;
     }

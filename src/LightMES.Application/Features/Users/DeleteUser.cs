@@ -12,11 +12,11 @@ public record DeleteUserCommand(
     public string RequiredPermission => Permissions.Users.Delete;
 }
 
-public class DeleteUserHandler : IRequestHandler<DeleteUserCommand, bool>
+public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, bool>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUserService _currentUserService;
-    public DeleteUserHandler(IAppDbContext context, ICurrentUserService currentUserService)
+    public DeleteUserCommandHandler(IAppDbContext context, ICurrentUserService currentUserService)
     {
         _context = context;
         _currentUserService = currentUserService;

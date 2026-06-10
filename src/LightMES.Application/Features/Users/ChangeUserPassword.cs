@@ -1,16 +1,25 @@
-﻿using LightMES.Application.Common.Interfaces;
+﻿using FluentValidation;
+using LightMES.Application.Common.Interfaces;
 using MediatR;
 
 namespace LightMES.Application.Features.Users;
 
 public record ChangeUserPasswordCommand(string OldPassword, string NewPassword) : IRequest<bool>;
-public class ChangeUserPasswordHandler : IRequestHandler<ChangeUserPasswordCommand, bool>
+public class ChangeUserPasswordCommandValidator : AbstractValidator<ChangeUserPasswordCommand>
+{
+    public ChangeUserPasswordCommandValidator()
+    {
+        RuleFor(x => x.OldPassword).NotEmpty().WithMessage("旧密码不能为空.");
+        RuleFor(x => x.NewPassword).NotEmpty().MinimumLength(6).WithMessage("密码至少6位.");
+    }
+}
+public class ChangeUserPasswordCommandHandler : IRequestHandler<ChangeUserPasswordCommand, bool>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ICurrentUserService _currentUserService;
 
-    public ChangeUserPasswordHandler(IAppDbContext context, IPasswordHasher passwordHasher, ICurrentUserService currentUserService)
+    public ChangeUserPasswordCommandHandler(IAppDbContext context, IPasswordHasher passwordHasher, ICurrentUserService currentUserService)
     {
         _context = context;
         _passwordHasher = passwordHasher;

@@ -1,4 +1,5 @@
 ﻿using LightMES.Domain.Common;
+using LightMES.Domain.Common.Exceptions;
 using LightMES.Domain.Enums;
 
 namespace LightMES.Domain.Entities;
@@ -44,6 +45,12 @@ public class Equipment : AuditableEntity
     }
     public void ChangeStatus(EquipmentStatus newStatus, string modifiedBy)
     {
+        if (Status == newStatus) return;
+        if (!IsActive) throw new InvalidStatusTransitionException($"Cannot change status of inactive equipment '{EquipmentCode}'.");
+        if (Status == EquipmentStatus.Maintenance && newStatus == EquipmentStatus.Running)
+            throw new InvalidStatusTransitionException("Equipment must be verified (set to Idle) after maintenance before it can start running.");
+        if (Status == EquipmentStatus.Down && (newStatus == EquipmentStatus.Running || newStatus == EquipmentStatus.Idle))
+            throw new InvalidStatusTransitionException("Down equipment must undergo maintenance before returning to service.");
         Status = newStatus;
         LastModifiedBy = modifiedBy;
         LastModifiedOn = DateTime.UtcNow;

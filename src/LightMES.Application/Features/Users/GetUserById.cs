@@ -5,11 +5,11 @@ using MediatR;
 namespace LightMES.Application.Features.Users;
 
 public record GetUserByIdQuery(Guid Id) : IRequest<UserDto>;
-public class GetUserByIdHandler : IRequestHandler<GetUserByIdQuery, UserDto>
+public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserDto>
 {
     private readonly IAppDbContext _context;
 
-    public GetUserByIdHandler(IAppDbContext context)
+    public GetUserByIdQueryHandler(IAppDbContext context)
     {
         _context = context;
     }

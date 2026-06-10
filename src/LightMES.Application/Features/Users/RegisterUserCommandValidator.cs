@@ -19,9 +19,9 @@ public record RegisterUserCommand(
     public string RequiredPermission => Permissions.Users.Create;
 }
 
-public class RegisterUser : AbstractValidator<RegisterUserCommand>
+public class RegisterUserCommandValidator : AbstractValidator<RegisterUserCommand>
 {
-    public RegisterUser()
+    public RegisterUserCommandValidator()
     {
         RuleFor(x => x.Username).NotEmpty().MinimumLength(3).WithMessage("用户名长度至少3位");
         RuleFor(x => x.Password).NotEmpty().MinimumLength(6).WithMessage("密码长度至少6位");
@@ -29,12 +29,12 @@ public class RegisterUser : AbstractValidator<RegisterUserCommand>
         RuleFor(x => x.EmployeeNo).NotEmpty().WithMessage("员工工号不能为空");
     }
 }
-public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Guid>
+public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, Guid>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ICurrentUserService _currentUserService;
-    public RegisterUserHandler(IAppDbContext context, IPasswordHasher passwordHasher, ICurrentUserService currentUserService)
+    public RegisterUserCommandHandler(IAppDbContext context, IPasswordHasher passwordHasher, ICurrentUserService currentUserService)
     {
         _context = context;
         _passwordHasher = passwordHasher;

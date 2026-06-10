@@ -12,6 +12,7 @@ using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
@@ -138,4 +139,9 @@ async Task SeedDatabaseAsync(WebApplication app)
         logger.LogError(ex, "初始化数据库种子数据时发生错误!");
         throw;
     }
+}
+// Provides a symbol for integration tests that reference the program type.
+// For minimal/top-level Program.cs projects, add this partial class so tests can use typeof(Program).
+public partial class Program
+{
 }

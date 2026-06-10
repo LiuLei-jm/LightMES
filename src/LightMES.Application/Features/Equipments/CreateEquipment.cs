@@ -19,11 +19,16 @@ public class CreateEquipmentCommandValidator : AbstractValidator<CreateEquipment
         _context = context;
         RuleFor(v => v.EquipmentCode)
             .NotEmpty().WithMessage("设备编码不能为空.")
-            .MaximumLength(50).WithMessage("设备编码最多50个字符")
-            .MustAsync(BeUniqueCode).WithMessage("设备编码已存在.");
+            .MaximumLength(50).WithMessage("设备编码最多50个字符");
         RuleFor(v => v.EquipmentName)
             .NotEmpty().WithMessage("设备名称不能为空.")
             .MaximumLength(100).WithMessage("设备名称最多100个字符.");
+        When(x => !string.IsNullOrWhiteSpace(x.EquipmentCode), () =>
+        {
+            RuleFor(v => v.EquipmentCode)
+            .MustAsync(BeUniqueCode)
+            .WithMessage("设备编码已存在.");
+        });
     }
 
     private async Task<bool> BeUniqueCode(string code, CancellationToken token)

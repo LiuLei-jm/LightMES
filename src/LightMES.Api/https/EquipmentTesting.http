@@ -28,11 +28,11 @@ Content-Type: {{contentType}}
 }
 
 ###
-GET {{LightMes.Api_HostAddress}}{{group}}?PageNumber=1&PageSize=10
+GET {{LightMes.Api_HostAddress}}{{group}}?SearchText=CNC&PageNumber=1&PageSize=10
 Accept: {{contentType}}
 
 ###
-@equipmentId = f1716688-8058-4738-983b-c94aa94cf42e
+@equipmentId = f1716689-8058-4738-983b-c94aa94cf42e
 GET {{LightMes.Api_HostAddress}}{{group}}/{{equipmentId}}
 Accept: {{contentType}}
 

@@ -5,11 +5,11 @@ using MediatR;
 namespace LightMES.Application.Features.Roles;
 
 public record DeleteRoleCommand(Guid Id) : IRequest<bool>;
-public class DeleteRoleHandler : IRequestHandler<DeleteRoleCommand, bool>
+public class DeleteRoleCommandHandler : IRequestHandler<DeleteRoleCommand, bool>
 {
     private readonly IAppDbContext _context;
 
-    public DeleteRoleHandler(IAppDbContext context)
+    public DeleteRoleCommandHandler(IAppDbContext context)
     {
         _context = context;
     }

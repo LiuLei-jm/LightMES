@@ -5,19 +5,19 @@ using MediatR;
 namespace LightMES.Application.Features.Roles;
 
 public record UpdateRoleCommand(Guid Id, string Name, string Description) : IRequest<bool>;
-public class UpdateRole : AbstractValidator<UpdateRoleCommand>
+public class UpdateRoleCommandValidator : AbstractValidator<UpdateRoleCommand>
 {
-    public UpdateRole()
+    public UpdateRoleCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(50).WithMessage("名称长度超出范围");
         RuleFor(x => x.Description).NotEmpty().MaximumLength(200).WithMessage("长度超出范围");
     }
 }
-public class UpdateRoleHandler : IRequestHandler<UpdateRoleCommand, bool>
+public class UpdateRoleCommandHandler : IRequestHandler<UpdateRoleCommand, bool>
 {
     private readonly IAppDbContext _context;
 
-    public UpdateRoleHandler(IAppDbContext context)
+    public UpdateRoleCommandHandler(IAppDbContext context)
     {
         _context = context;
     }

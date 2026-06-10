@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore;
 namespace LightMES.Application.Features.Users;
 
 public record GetUsersQuery(bool? ActiveOnly) : IRequest<List<UserDto>>;
-public class GetUsersHandler : IRequestHandler<GetUsersQuery, List<UserDto>>
+public class GetUsersQueryHandler : IRequestHandler<GetUsersQuery, List<UserDto>>
 {
     private readonly IAppDbContext _context;
 
-    public GetUsersHandler(IAppDbContext context)
+    public GetUsersQueryHandler(IAppDbContext context)
     {
         _context = context;
     }

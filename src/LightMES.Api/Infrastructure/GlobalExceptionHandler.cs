@@ -23,11 +23,6 @@ public class GlobalExceptionHandler : IExceptionHandler
             "Unauthorized",
             exception.Message ?? "用户未登录或 Token 已过期."
             ),
-            ForbiddenAccessException => (
-            StatusCodes.Status403Forbidden,
-            "Forbidden",
-            exception.Message ?? "您没有执行该操作的权限."
-            ),
             ArgumentException or InvalidOperationException =>
             (
             StatusCodes.Status400BadRequest,
@@ -38,6 +33,16 @@ public class GlobalExceptionHandler : IExceptionHandler
                 StatusCodes.Status400BadRequest,
                 "Validation Failed",
                 exception.Message
+            ),
+            ForbiddenAccessException => (
+            StatusCodes.Status403Forbidden,
+            "Forbidden",
+            exception.Message ?? "您没有执行该操作的权限."
+            ),
+            KeyNotFoundException => (
+            StatusCodes.Status404NotFound,
+            "NotFound",
+            exception.Message ?? "当前KEY没有找到"
             ),
             _ => (
             StatusCodes.Status500InternalServerError,

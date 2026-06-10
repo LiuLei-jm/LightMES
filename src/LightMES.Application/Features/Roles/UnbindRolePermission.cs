@@ -17,11 +17,11 @@ public class UnbindRolePermissionCommandValidator : AbstractValidator<UnbindRole
             .WithMessage(x => $"Permission '{x.Permission}' is invalid. Please use a defined system permission.");
     }
 }
-public class UnbindRolePermissionHandler : IRequestHandler<UnbindRolePermissionCommand, Unit>
+public class UnbindRolePermissionCommandHandler : IRequestHandler<UnbindRolePermissionCommand, Unit>
 {
     private readonly IAppDbContext _context;
 
-    public UnbindRolePermissionHandler(IAppDbContext context)
+    public UnbindRolePermissionCommandHandler(IAppDbContext context)
     {
         _context = context;
     }

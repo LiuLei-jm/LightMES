@@ -5,22 +5,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LightMES.Application.Features.Users;
 
-public record LoginRequest(string? Username, string? Password, string? BadgeNo) : IRequest<LoginResult>;
+public record LoginUserCommand(string? Username, string? Password, string? BadgeNo) : IRequest<LoginResult>;
 public record LoginResult(bool Success, string Token = "", string Message = "", string FullName = "", ICollection<UserRole> Roles = null!);
-public class LoginUserHandler : IRequestHandler<LoginRequest, LoginResult>
+public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginResult>
 {
     private readonly IAppDbContext _context;
     private readonly IPasswordHasher _passwordHasher;
     private readonly IJwtTokenGenerator _tokenGenerator;
 
-    public LoginUserHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator tokenGenerator)
+    public LoginUserCommandHandler(IAppDbContext context, IPasswordHasher passwordHasher, IJwtTokenGenerator tokenGenerator)
     {
         _context = context;
         _passwordHasher = passwordHasher;
         _tokenGenerator = tokenGenerator;
     }
 
-    public async Task<LoginResult> Handle(LoginRequest request, CancellationToken cancellationToken)
+    public async Task<LoginResult> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
         User? user = null;
         if (!string.IsNullOrWhiteSpace(request.BadgeNo))

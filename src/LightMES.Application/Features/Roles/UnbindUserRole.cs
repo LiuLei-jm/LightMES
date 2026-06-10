@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 namespace LightMES.Application.Features.Roles;
 
 public record UnbindUserRoleCommand(Guid UserId, Guid RoleId) : IRequest<Unit>;
-public class UnbindUserRoleHandler : IRequestHandler<UnbindUserRoleCommand, Unit>
+public class UnbindUserRoleCommandHandler : IRequestHandler<UnbindUserRoleCommand, Unit>
 {
     private readonly IAppDbContext _context;
 
-    public UnbindUserRoleHandler(IAppDbContext context)
+    public UnbindUserRoleCommandHandler(IAppDbContext context)
     {
         _context = context;
     }

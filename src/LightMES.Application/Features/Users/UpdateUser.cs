@@ -15,12 +15,12 @@ public record UpdateUserCommand(
     public string RequiredPermission => Permissions.Users.Edit;
 }
 
-public class UpdateUserHandler : IRequestHandler<UpdateUserCommand, bool>
+public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, bool>
 {
     private readonly IAppDbContext _context;
     private readonly ICurrentUserService _currentUserService;
 
-    public UpdateUserHandler(IAppDbContext context, ICurrentUserService currentUserService)
+    public UpdateUserCommandHandler(IAppDbContext context, ICurrentUserService currentUserService)
     {
         _context = context;
         _currentUserService = currentUserService;

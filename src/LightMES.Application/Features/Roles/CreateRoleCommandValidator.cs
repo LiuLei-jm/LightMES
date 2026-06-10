@@ -7,9 +7,9 @@ using Microsoft.EntityFrameworkCore;
 namespace LightMES.Application.Features.Roles;
 
 public record CreateRoleCommand(string Name, string Description) : IRequest<Guid>;
-public class CreateRole : AbstractValidator<CreateRoleCommand>
+public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
 {
-    public CreateRole()
+    public CreateRoleCommandValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(50).WithMessage("名称长度超出范围");
         RuleFor(x => x.Description).NotEmpty().MaximumLength(200).WithMessage("长度超出范围");
