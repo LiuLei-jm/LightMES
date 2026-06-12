@@ -20,6 +20,7 @@ public class WorkOrderStepProgress : BaseEntity
     public int ScrapQty { get; private set; }
 
     private WorkOrderStepProgress() { }
+
     public WorkOrderStepProgress(Guid id, Guid workOrderId, Guid stepId, int plannedQty)
     {
         Id = id;
@@ -32,6 +33,7 @@ public class WorkOrderStepProgress : BaseEntity
         DefectiveQty = 0;
         ScrapQty = 0;
     }
+
     public void RecordTrackIn()
     {
         if (InQueueQty > 0)
@@ -39,8 +41,7 @@ public class WorkOrderStepProgress : BaseEntity
             InQueueQty--;
             ProcessingQty++;
         }
-        if (InQueueQty == 0 && ProcessingQty == 0)
-            Status = StepStatus.Completed;
+        CheckCompletion();
     }
 
     public void RecordTrackOut()
@@ -50,6 +51,7 @@ public class WorkOrderStepProgress : BaseEntity
             ProcessingQty--;
             GoodQty++;
         }
+        CheckCompletion();
     }
 
     public void RecordDefective()
@@ -59,7 +61,9 @@ public class WorkOrderStepProgress : BaseEntity
             ProcessingQty--;
             DefectiveQty++;
         }
+        CheckCompletion();
     }
+
     public void RecordScrap()
     {
         if (ProcessingQty > 0)
@@ -67,6 +71,11 @@ public class WorkOrderStepProgress : BaseEntity
             ProcessingQty--;
             ScrapQty++;
         }
+        CheckCompletion();
+    }
+
+    private void CheckCompletion()
+    {
         if (InQueueQty == 0 && ProcessingQty == 0)
             Status = StepStatus.Completed;
     }

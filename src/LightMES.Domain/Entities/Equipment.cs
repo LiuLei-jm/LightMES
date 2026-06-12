@@ -21,7 +21,7 @@ public class Equipment : AuditableEntity
             throw new ArgumentException("设备编码不能为空", nameof(equipmentCode));
         if (string.IsNullOrWhiteSpace(equipmentName))
             throw new ArgumentException("设备名称不能为空", nameof(equipmentName));
-        Id = id;
+        Id = id == Guid.Empty ? Guid.NewGuid() : id;
         EquipmentCode = equipmentCode;
         EquipmentName = equipmentName;
         Location = location;

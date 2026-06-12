@@ -13,7 +13,7 @@ public class Route : AuditableEntity
     private Route() { }
     public Route(Guid id, string routeCode, string routeName, string version, string createdBy)
     {
-        Id = id;
+        Id = id == Guid.Empty ? Guid.NewGuid() : id;
         RouteCode = routeCode;
         RouteName = routeName;
         Version = version;
@@ -32,7 +32,7 @@ public class Route : AuditableEntity
     }
     public void Delete()
     {
-        IsDeleted = false;
+        IsDeleted = true;
     }
     public void AddStep(string stepCode, string stepName, int sequence, int standardCycleTime, bool isRequired)
     {

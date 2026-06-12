@@ -7,7 +7,6 @@ using LightMES.Domain.Enums;
 using LightMES.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
-using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -20,13 +19,15 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
     private static readonly JsonSerializerOptions JsonSerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true,
-        Converters = {new JsonStringEnumConverter()}
+        Converters = { new JsonStringEnumConverter() },
     };
+
     public EquipmentEndpointTests(CustomWebApplicationFactory<Program> factory)
     {
         _factory = factory;
         _client = _factory.CreateClient();
     }
+
     #region 1. 创建测试 (Create)
     [Fact]
     public async Task Create_ShouldReturnCreated_WithValidData()
@@ -36,7 +37,7 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         {
             EquipmentCode = "EQ-INTEG-01",
             EquipmentName = "集成测试切削机",
-            Location = "B车间"
+            Location = "B车间",
         };
         //Act
         var response = await _client.PostAsJsonAsync("/api/equipments", command);
@@ -49,18 +50,16 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         equipment.Should().NotBeNull();
         equipment!.EquipmentName.Should().Be("集成测试切削机");
     }
+
     [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenCodeAlreadyExists()
     {
         //Arrange
         var existingCode = "EQ-DUP";
-        await SeedEquipmentAsync(new Equipment(Guid.NewGuid(), existingCode, "旧设备", "", "", "System"));
-        var command = new CreateEquipmentCommand
-        (
-            existingCode,
-            "新设备",
-            "",
-            "");
+        await SeedEquipmentAsync(
+            new Equipment(Guid.NewGuid(), existingCode, "旧设备", "", "", "System")
+        );
+        var command = new CreateEquipmentCommand(existingCode, "新设备", "", "");
         //ACT
         var response = await _client.PostAsJsonAsync("/api/equipments", command);
         //Assert
@@ -68,20 +67,18 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         var errorContent = await response.Content.ReadAsStringAsync();
         errorContent.Should().Contain("设备编码已存在.");
     }
+
     [Fact]
     public async Task Create_ShouldReturnBadRequest_WhenRequiredFieldsAreMissing()
     {
         //Arrange
-        var invalidCommand = new
-        {
-            EquipmentCode = "",
-            EquipmentName = ""
-        };
+        var invalidCommand = new { EquipmentCode = "", EquipmentName = "" };
         //ACT
         var response = await _client.PostAsJsonAsync("/api/equipments", invalidCommand);
         //Assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
     }
+
     [Fact]
     public async Task Create_WithValidCommand_ShouldReturnCreatedAndId()
     {
@@ -110,6 +107,7 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         dto.Should().NotBeNull();
         dto!.EquipmentCode.Should().Be("EQ-002");
     }
+
     [Fact]
     public async Task GetById_ShouldReturnNotFound_WhenEquipmentDoseNotExist()
     {
@@ -118,24 +116,36 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         //Assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.NotFound);
     }
+
     [Fact]
     public async Task GetWithPagination_ShouldReturnPaginatedList_AndSupportFiltering()
     {
         //Arrange
         await ClearEquipmentsTableAsync();
-        await SeedEquipmentAsync(new Equipment(Guid.NewGuid(), "CNC-01", "CNC A", "", "", "System"));
-        await SeedEquipmentAsync(new Equipment(Guid.NewGuid(), "CNC-02", "CNC B", "", "", "System"));
-        await SeedEquipmentAsync(new Equipment(Guid.NewGuid(), "PLC-01", "PLC A", "", "", "System"));
+        await SeedEquipmentAsync(
+            new Equipment(Guid.NewGuid(), "CNC-01", "CNC A", "", "", "System")
+        );
+        await SeedEquipmentAsync(
+            new Equipment(Guid.NewGuid(), "CNC-02", "CNC B", "", "", "System")
+        );
+        await SeedEquipmentAsync(
+            new Equipment(Guid.NewGuid(), "PLC-01", "PLC A", "", "", "System")
+        );
         //Act
-        var response = await _client.GetAsync("/api/equipments?PageNumber=1&PageSize=10&SearchText=CNC");
+        var response = await _client.GetAsync(
+            "/api/equipments?PageNumber=1&PageSize=10&SearchText=CNC"
+        );
         //Assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        var result = await response.Content.ReadFromJsonAsync<PaginatedList<EquipmentDto>>(JsonSerializerOptions);
+        var result = await response.Content.ReadFromJsonAsync<PaginatedList<EquipmentDto>>(
+            JsonSerializerOptions
+        );
 
         result.Should().NotBeNull();
         result!.TotalCount.Should().Be(2);
         result.Items.Should().OnlyContain(e => e.EquipmentCode.StartsWith("CNC"));
     }
+
     [Fact]
     public async Task GetWithPagination_ShouldReturnPaginateList()
     {
@@ -144,7 +154,9 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         var response = await _client.GetAsync("/api/equipments?PageNumber=1&PageSize=10");
         //Assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
-        var result = await response.Content!.ReadFromJsonAsync<PaginatedList<EquipmentDto>>(JsonSerializerOptions);
+        var result = await response.Content!.ReadFromJsonAsync<PaginatedList<EquipmentDto>>(
+            JsonSerializerOptions
+        );
         result.Should().NotBeNull();
         result!.Items.Should().BeEmpty();
     }
@@ -179,6 +191,7 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         await db.Equipments.AddAsync(equipment);
         await db.SaveChangesAsync();
     }
+
     private async Task ClearEquipmentsTableAsync()
     {
         using var scope = _factory.Services.CreateScope();

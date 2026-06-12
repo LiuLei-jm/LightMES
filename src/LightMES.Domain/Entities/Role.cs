@@ -4,10 +4,10 @@ namespace LightMES.Domain.Entities;
 
 public class Role : BaseEntity
 {
-    public string Name { get; private set; }
-    public string Description { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string Description { get; private set; } = string.Empty;
 
-    public ICollection<UserRole> UserRoles { get; private set; } = new List<UserRole>();
+    public ICollection<UserRole> UserRoles { get; private set; } = [];
     public ICollection<RolePermission> RolePermissions { get; private set; } =
         [];
 

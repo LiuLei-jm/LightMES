@@ -15,7 +15,9 @@ public record GetEquipmentsWithPaginationQuery : IRequest<PaginatedList<Equipmen
     public int PageNumber { get; init; } = 1;
     public int PageSize { get; init; } = 10;
 }
-public class GetEquipmentsWithPaginationQueryHandler : IRequestHandler<GetEquipmentsWithPaginationQuery, PaginatedList<EquipmentDto>>
+
+public class GetEquipmentsWithPaginationQueryHandler
+    : IRequestHandler<GetEquipmentsWithPaginationQuery, PaginatedList<EquipmentDto>>
 {
     private readonly IAppDbContext _context;
 
@@ -24,13 +26,18 @@ public class GetEquipmentsWithPaginationQueryHandler : IRequestHandler<GetEquipm
         _context = context;
     }
 
-    public async Task<PaginatedList<EquipmentDto>> Handle(GetEquipmentsWithPaginationQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedList<EquipmentDto>> Handle(
+        GetEquipmentsWithPaginationQuery request,
+        CancellationToken cancellationToken
+    )
     {
         var query = _context.Equipments.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(request.SearchText))
         {
             var search = request.SearchText.Trim();
-            query = query.Where(x => x.EquipmentCode.Contains(search) || x.EquipmentName.Contains(search));
+            query = query.Where(x =>
+                x.EquipmentCode.Contains(search) || x.EquipmentName.Contains(search)
+            );
         }
         if (request.Status.HasValue)
         {
@@ -50,11 +57,17 @@ public class GetEquipmentsWithPaginationQueryHandler : IRequestHandler<GetEquipm
             x.Location,
             x.Description,
             x.IsActive,
-            x.CreatedBy,
+            x.CreatedBy!,
             x.CreatedOn,
             x.LastModifiedBy,
             x.LastModifiedOn
-            ));
-        return await PaginatedList<EquipmentDto>.CreateAsync(dtoQuery, request.PageNumber, request.PageSize, cancellationToken);
+        ));
+        return await PaginatedList<EquipmentDto>.CreateAsync(
+            dtoQuery,
+            request.PageNumber,
+            request.PageSize,
+            cancellationToken
+        );
     }
 }
+

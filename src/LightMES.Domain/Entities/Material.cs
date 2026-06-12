@@ -24,7 +24,7 @@ public class Material : AuditableEntity
             throw new ArgumentException("物料名称不能为空", nameof(materialName));
         if (string.IsNullOrWhiteSpace(unit))
             throw new ArgumentException("计量单位不能为空", nameof(unit));
-        Id = id;
+        Id = id == Guid.Empty ? Guid.NewGuid() : id;
         MaterialCode = materialCode.ToUpper();
         MaterialName = materialName;
         Specification = specification;

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace LightMES.Application.Features.Equipments;
 
 public record GetEquipmentByIdQuery(Guid Id) : IRequest<EquipmentDto>;
+
 public class GetEquipmentByIdQueryHandler : IRequestHandler<GetEquipmentByIdQuery, EquipmentDto>
 {
     private readonly IAppDbContext _context;
@@ -16,10 +17,13 @@ public class GetEquipmentByIdQueryHandler : IRequestHandler<GetEquipmentByIdQuer
         _context = context;
     }
 
-    public async Task<EquipmentDto> Handle(GetEquipmentByIdQuery request, CancellationToken cancellationToken)
+    public async Task<EquipmentDto> Handle(
+        GetEquipmentByIdQuery request,
+        CancellationToken cancellationToken
+    )
     {
-        var dto = await _context.Equipments
-            .AsNoTracking()
+        var dto = await _context
+            .Equipments.AsNoTracking()
             .Where(x => x.Id == request.Id)
             .Select(x => new EquipmentDto(
                 x.Id,
@@ -30,12 +34,13 @@ public class GetEquipmentByIdQueryHandler : IRequestHandler<GetEquipmentByIdQuer
                 x.Location,
                 x.Description,
                 x.IsActive,
-                x.CreatedBy,
+                x.CreatedBy!,
                 x.CreatedOn,
                 x.LastModifiedBy,
                 x.LastModifiedOn
-                ))
+            ))
             .FirstOrDefaultAsync(cancellationToken);
         return dto == null ? throw new KeyNotFoundException(nameof(Equipment)) : dto;
     }
 }
+

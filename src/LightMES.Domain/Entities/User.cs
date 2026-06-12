@@ -14,7 +14,7 @@ public class User : AuditableEntity
     private User() { }
     public User(Guid id, string username, string passwordHash, string fullName, string employeeNo, string? badgeNo, string createdBy)
     {
-        Id = id;
+        Id = id == Guid.Empty ? Guid.NewGuid() : id;
         Username = username.ToLower();
         PasswordHash = passwordHash;
         FullName = fullName;

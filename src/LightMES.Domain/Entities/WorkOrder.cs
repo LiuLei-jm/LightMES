@@ -76,6 +76,7 @@ public class WorkOrder : AuditableEntity
     }
     public void ReportProgress(int okQty, int scrapQty)
     {
+        if (okQty < 0 || scrapQty < 0) throw new ArgumentException("报工数量不能为负数");
         CompletedQty += okQty;
         ScrapQty += scrapQty;
         if (CompletedQty >= PlanQty)
@@ -96,6 +97,7 @@ public class WorkOrder : AuditableEntity
     }
     public void Cancel()
     {
+        if (Status == OrderStatus.Canceled) return;
         if (Status == OrderStatus.Completed) throw new InvalidOperationException("已完工的工单无法撤销!");
         Status = OrderStatus.Canceled;
         ActualEndTime = DateTime.UtcNow;
