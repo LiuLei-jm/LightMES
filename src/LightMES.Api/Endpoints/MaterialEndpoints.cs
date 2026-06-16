@@ -1,6 +1,5 @@
 using LightMES.Application.Features.Materials;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
 
 namespace LightMES.Api.Endpoints;
 

@@ -1,6 +1,3 @@
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using FluentAssertions;
 using LightMES.Application.Common.Models;
 using LightMES.Application.Features.Equipments;
@@ -10,8 +7,11 @@ using LightMES.Domain.Entities;
 using LightMES.Domain.Enums;
 using LightMES.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace LightMES.Tests.Api;
+namespace LightMES.Tests.Integration.Api;
 
 public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
