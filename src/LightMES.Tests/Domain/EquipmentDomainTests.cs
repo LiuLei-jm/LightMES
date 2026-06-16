@@ -1,5 +1,6 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using LightMES.Domain.Common.Exceptions;
+using LightMES.Domain.Constants;
 using LightMES.Domain.Entities;
 using LightMES.Domain.Enums;
 using LightMES.Tests.Common;
@@ -44,7 +45,7 @@ public class EquipmentDomainTests
     {
         //Arrange
         var equipment = CreateTestEquipment();
-        equipment.Deactivate("System");
+        equipment.Deactivate(SystemConst.User.DefaultUser);
         //Act
         Action act = () =>
             equipment.ChangeStatus(EquipmentStatus.Running, TestConstants.Audit.ModifiedBy);

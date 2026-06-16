@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using LightMES.Application.Common.Interfaces;
 using LightMES.Application.Common.Security;
 using LightMES.Domain.Constants;
@@ -50,7 +50,7 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, G
         if (await _context.Users.AnyAsync(u => u.EmployeeNo == request.EmployeeNo.ToUpper(), cancellationToken))
             throw new InvalidOperationException("该工号已经被注册");
         var passwordHash = _passwordHasher.HashPassword(request.Password);
-        var creator = _currentUserService.Username ?? "System";
+        var creator = _currentUserService.Username ?? SystemConst.User.DefaultUser;
         var user = new User(Guid.NewGuid(), request.Username, passwordHash, request.FullName, request.EmployeeNo, request.BadgeNo, creator);
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync(cancellationToken);

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 using LightMES.Application.Common.Interfaces;
 using LightMES.Application.Common.Security;
 using LightMES.Domain.Constants;
@@ -35,7 +35,7 @@ public class ResetUserPasswordCommandHandler : IRequestHandler<ResetUserPassword
     {
         var user = await _context.Users.FindAsync(new object[] { request.TargetUserId }, cancellationToken) ?? throw new KeyNotFoundException("User not found");
         var passwordHash = _passwordHasher.HashPassword(request.NewPassword);
-        var currentUser = _currentUserService.Username ?? "System";
+        var currentUser = _currentUserService.Username ?? SystemConst.User.DefaultUser;
         user.ChangePassword(passwordHash, currentUser);
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;

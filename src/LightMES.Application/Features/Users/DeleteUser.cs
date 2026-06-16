@@ -1,4 +1,4 @@
-﻿using LightMES.Application.Common.Interfaces;
+using LightMES.Application.Common.Interfaces;
 using LightMES.Application.Common.Security;
 using LightMES.Domain.Constants;
 using MediatR;
@@ -30,7 +30,7 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, bool>
         {
             throw new InvalidOperationException("系统安全保护：不能删除超级管理员账号。");
         }
-        var operatorName = _currentUserService.Username ?? "System";
+        var operatorName = _currentUserService.Username ?? SystemConst.User.DefaultUser;
         user.Delete(operatorName);
         await _context.SaveChangesAsync(cancellationToken);
         return true;

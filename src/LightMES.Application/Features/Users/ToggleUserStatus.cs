@@ -1,4 +1,4 @@
-﻿using LightMES.Application.Common.Interfaces;
+using LightMES.Application.Common.Interfaces;
 using LightMES.Application.Common.Security;
 using LightMES.Domain.Constants;
 using MediatR;
@@ -31,7 +31,7 @@ public class ToggleUserStatusCommandHandler : IRequestHandler<ToggleUserStatusCo
         {
             throw new InvalidOperationException("系统安全保护：不能禁用超级管理员账号。");
         }
-        var operatorName = _currentUserService.Username ?? "System";
+        var operatorName = _currentUserService.Username ?? SystemConst.User.DefaultUser;
         if (request.IsActive) user.Activate(operatorName); else user.Deactivate(operatorName);
         await _context.SaveChangesAsync(cancellationToken);
         return true;

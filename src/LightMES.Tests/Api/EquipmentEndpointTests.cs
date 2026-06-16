@@ -1,14 +1,15 @@
-﻿using FluentAssertions;
+using System.Net.Http.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using FluentAssertions;
 using LightMES.Application.Common.Models;
 using LightMES.Application.Features.Equipments;
 using LightMES.Application.Features.Equipments.Dtos;
+using LightMES.Domain.Constants;
 using LightMES.Domain.Entities;
 using LightMES.Domain.Enums;
 using LightMES.Infrastructure.Persistence;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace LightMES.Tests.Api;
 
@@ -57,7 +58,14 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         //Arrange
         var existingCode = "EQ-DUP";
         await SeedEquipmentAsync(
-            new Equipment(Guid.NewGuid(), existingCode, "旧设备", "", "", "System")
+            new Equipment(
+                Guid.NewGuid(),
+                existingCode,
+                "旧设备",
+                "",
+                "",
+                SystemConst.User.DefaultUser
+            )
         );
         var command = new CreateEquipmentCommand(existingCode, "新设备", "", "");
         //ACT
@@ -97,7 +105,14 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
     public async Task GetById_ShouldReturnEquipment_WhenEquipmentExists()
     {
         //Arrange
-        var equipment = new Equipment(Guid.NewGuid(), "EQ-002", "注塑机 #2", "", "", "System");
+        var equipment = new Equipment(
+            Guid.NewGuid(),
+            "EQ-002",
+            "注塑机 #2",
+            "",
+            "",
+            SystemConst.User.DefaultUser
+        );
         await SeedEquipmentAsync(equipment);
         //Act
         var response = await _client.GetAsync($"/api/equipments/{equipment.Id}");
@@ -123,13 +138,13 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         //Arrange
         await ClearEquipmentsTableAsync();
         await SeedEquipmentAsync(
-            new Equipment(Guid.NewGuid(), "CNC-01", "CNC A", "", "", "System")
+            new Equipment(Guid.NewGuid(), "CNC-01", "CNC A", "", "", SystemConst.User.DefaultUser)
         );
         await SeedEquipmentAsync(
-            new Equipment(Guid.NewGuid(), "CNC-02", "CNC B", "", "", "System")
+            new Equipment(Guid.NewGuid(), "CNC-02", "CNC B", "", "", SystemConst.User.DefaultUser)
         );
         await SeedEquipmentAsync(
-            new Equipment(Guid.NewGuid(), "PLC-01", "PLC A", "", "", "System")
+            new Equipment(Guid.NewGuid(), "PLC-01", "PLC A", "", "", SystemConst.User.DefaultUser)
         );
         //Act
         var response = await _client.GetAsync(
@@ -166,8 +181,15 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
     public async Task Update_ShouldUpdateDatabase_WhenDataIsValid()
     {
         //Arrange
-        var equipment = new Equipment(Guid.NewGuid(), "EQ-003", "原始名称", "", "", "System");
-        equipment.ChangeStatus(EquipmentStatus.Maintenance, "System");
+        var equipment = new Equipment(
+            Guid.NewGuid(),
+            "EQ-003",
+            "原始名称",
+            "",
+            "",
+            SystemConst.User.DefaultUser
+        );
+        equipment.ChangeStatus(EquipmentStatus.Maintenance, SystemConst.User.DefaultUser);
         await SeedEquipmentAsync(equipment);
         var command = new UpdateEquipmentCommand(equipment.Id, "修改后的名称", "", "");
         //Act

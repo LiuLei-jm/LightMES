@@ -1,4 +1,4 @@
-﻿using LightMES.Application.Common.Interfaces;
+using LightMES.Application.Common.Interfaces;
 using LightMES.Application.Common.Security;
 using LightMES.Domain.Constants;
 using MediatR;
@@ -30,7 +30,7 @@ public class UpdateUserCommandHandler : IRequestHandler<UpdateUserCommand, bool>
     {
         var user = await _context.Users.FindAsync(new object[] { request.Id }, cancellationToken);
         if (user == null) return false;
-        var modifier = _currentUserService.Username ?? "System";
+        var modifier = _currentUserService.Username ?? SystemConst.User.DefaultUser;
         user.UpdateProfile(request.FullName, request.EmployeeNo, request.BadgeNo, modifier);
         await _context.SaveChangesAsync(cancellationToken);
         return true;
