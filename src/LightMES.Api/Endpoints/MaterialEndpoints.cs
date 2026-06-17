@@ -24,6 +24,7 @@ public static class MaterialEndpoints
                 "/{id:guid}",
                 async (Guid id, UpdateMaterialCommand command, ISender sender) =>
                 {
+                    if (id != command.Id) return Results.BadRequest("路由 ID 与请求体 ID 不一致");
                     var result = await sender.Send(command);
                     return Results.NoContent();
                 }

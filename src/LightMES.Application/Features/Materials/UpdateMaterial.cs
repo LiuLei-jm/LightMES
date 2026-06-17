@@ -41,15 +41,21 @@ public class UpdateMaterialCommandHandler(
     private readonly ICurrentUserService _currentUserService = currentUserService;
 
     public async Task<Unit> Handle(
-        UpdateMaterialCommand request,
+        UpdateMaterialCommand command,
         CancellationToken cancellationToken
     )
     {
         var material =
-            await _context.Materials.FindAsync(new object[] { request.Id }, cancellationToken)
-            ?? throw new KeyNotFoundException($"未找到 ID 未 {request.Id} 的物料.");
+            await _context.Materials.FindAsync(new object[] { command.Id }, cancellationToken)
+            ?? throw new KeyNotFoundException($"未找到 ID 未 {command.Id} 的物料.");
         var currentUser = _currentUserService.Username ?? SystemConst.User.DefaultUser;
-        material.Activate(currentUser);
+        material.Update(
+            command.MaterialName,
+            command.Specification,
+            command.Unit,
+            command.MaterialType,
+            currentUser
+        );
         await _context.SaveChangesAsync(cancellationToken);
         return Unit.Value;
     }

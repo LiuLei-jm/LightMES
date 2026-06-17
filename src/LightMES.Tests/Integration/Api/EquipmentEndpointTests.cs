@@ -6,27 +6,16 @@ using LightMES.Domain.Constants;
 using LightMES.Domain.Entities;
 using LightMES.Domain.Enums;
 using LightMES.Infrastructure.Persistence;
+using LightMES.Tests.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Json;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace LightMES.Tests.Integration.Api;
 
-public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<Program>>
+public class EquipmentEndpointTests : IntegrationTestBase
 {
-    private readonly HttpClient _client;
-    private readonly CustomWebApplicationFactory<Program> _factory;
-    private static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    public EquipmentEndpointTests(CustomWebApplicationFactory<Program> factory) : base(factory)
     {
-        PropertyNameCaseInsensitive = true,
-        Converters = { new JsonStringEnumConverter() },
-    };
-
-    public EquipmentEndpointTests(CustomWebApplicationFactory<Program> factory)
-    {
-        _factory = factory;
-        _client = _factory.CreateClient();
     }
 
     #region 1. 创建测试 (Create)
@@ -153,7 +142,7 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         //Assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         var result = await response.Content.ReadFromJsonAsync<PaginatedList<EquipmentDto>>(
-            JsonSerializerOptions
+            TestJsonOptions.Default
         );
 
         result.Should().NotBeNull();
@@ -170,7 +159,7 @@ public class EquipmentEndpointTests : IClassFixture<CustomWebApplicationFactory<
         //Assert
         response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         var result = await response.Content!.ReadFromJsonAsync<PaginatedList<EquipmentDto>>(
-            JsonSerializerOptions
+            TestJsonOptions.Default
         );
         result.Should().NotBeNull();
         result!.Items.Should().BeEmpty();

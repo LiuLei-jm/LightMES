@@ -74,5 +74,13 @@ public static class RouteStepEndpoints
             )
             .WithName("GetRouteStepByRouteId")
             .WithSummary("通过RouteId获取工艺");
+        group.MapGet(
+            "/", async (ISender sender) =>
+            {
+                var results = await sender.Send(new GetRouteStepQuery());
+                return Results.Ok(results);
+            })
+            .WithName("GetRouteSteps")
+            .WithSummary("获取所有工艺");
     }
 }

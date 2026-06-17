@@ -10,23 +10,20 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
         builder.ToTable("Roles");
         builder.HasKey(r => r.Id);
-        builder.Property(r => r.Name)
-            .IsRequired()
-            .HasMaxLength(50);
-        builder.Property(r => r.Description)
-            .HasMaxLength(200)
-            .IsRequired();
+        builder.Property(r => r.Name).IsRequired().HasMaxLength(50);
+        builder.Property(r => r.Description).HasMaxLength(200).IsRequired();
         builder.HasKey(r => r.Id);
-        builder.HasMany(r => r.UserRoles)
+        builder
+            .HasMany(r => r.UserRoles)
             .WithOne(ur => ur.Role)
             .HasForeignKey(ur => ur.RoleId)
             .OnDelete(DeleteBehavior.Cascade);
-        builder.HasMany(r => r.RolePermissions)
+        builder
+            .HasMany(r => r.RolePermissions)
             .WithOne(rp => rp.Role)
             .HasForeignKey(rp => rp.RoleId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(r => r.Name)
-            .IsUnique();
+        builder.HasIndex(r => r.Name).IsUnique();
     }
 }
