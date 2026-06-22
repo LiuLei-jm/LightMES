@@ -154,6 +154,7 @@ public class RouteEndpointsTests : IntegrationTestBase
     public async Task DeleteRoute_WhenExists_ShouldReturnNoContentAndBeDeleted()
     {
         // Arrange
+        await ClearRoutesTableAsync();
         var routeId = Guid.NewGuid();
         await SeedRouteAsync(new Route(
             routeId,

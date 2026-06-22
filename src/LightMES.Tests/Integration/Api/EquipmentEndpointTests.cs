@@ -94,6 +94,7 @@ public class EquipmentEndpointTests : IntegrationTestBase
     public async Task GetById_ShouldReturnEquipment_WhenEquipmentExists()
     {
         //Arrange
+        await ClearEquipmentsTableAsync();
         var equipment = new Equipment(
             Guid.NewGuid(),
             "EQ-002",

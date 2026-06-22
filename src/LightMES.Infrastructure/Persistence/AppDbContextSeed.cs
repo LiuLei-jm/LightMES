@@ -2,6 +2,7 @@
 using LightMES.Domain.Common;
 using LightMES.Domain.Constants;
 using LightMES.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LightMES.Infrastructure.Persistence;
 
@@ -52,11 +53,12 @@ public static class AppDbContextSeed
                 "Admin001",
                 SystemConst.User.DefaultUser
             );
-            await context.Users.AddAsync(defaultAdmin);
-            var userRoleRelation = new UserRole { UserId = defaultAdmin.Id, RoleId = adminRole.Id };
-
-            await context.UserRoles.AddAsync(userRoleRelation);
-
+            if (!await context.Users.AnyAsync(u => u.Id == defaultAdmin.Id))
+            {
+                await context.Users.AddAsync(defaultAdmin);
+                var userRoleRelation = new UserRole { UserId = defaultAdmin.Id, RoleId = adminRole.Id };
+                await context.UserRoles.AddAsync(userRoleRelation);
+            }
             await context.SaveChangesAsync();
         }
     }
