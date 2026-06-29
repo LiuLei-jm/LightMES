@@ -1,7 +1,6 @@
 using LightMES.Application.Common.Interfaces;
 using LightMES.Domain.Constants;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace LightMES.Application.Features.Materials;
 

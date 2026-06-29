@@ -1,6 +1,7 @@
 ﻿using LightMES.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 
 namespace LightMES.Api.Infrastructure;
 
@@ -19,9 +20,19 @@ public class GlobalExceptionHandler : IExceptionHandler
         var (statusCode, title, detail) = exception switch
         {
             UnauthorizedAccessException => (
-            StatusCodes.Status100Continue,
+            StatusCodes.Status401Unauthorized,
             "Unauthorized",
             exception.Message ?? "用户未登录或 Token 已过期."
+            ),
+            ForbiddenAccessException => (
+            StatusCodes.Status403Forbidden,
+            "Forbidden",
+            exception.Message ?? "您没有执行该操作的权限."
+            ),
+            KeyNotFoundException => (
+            StatusCodes.Status404NotFound,
+            "Not Found",
+            exception.Message ?? "请求的资源未找到"
             ),
             ArgumentException or InvalidOperationException =>
             (
@@ -32,28 +43,32 @@ public class GlobalExceptionHandler : IExceptionHandler
             FluentValidation.ValidationException => (
                 StatusCodes.Status400BadRequest,
                 "Validation Failed",
-                exception.Message
+                "输入的数据未通过系统验证，请修改后重试."
             ),
-            ForbiddenAccessException => (
-            StatusCodes.Status403Forbidden,
-            "Forbidden",
-            exception.Message ?? "您没有执行该操作的权限."
-            ),
-            KeyNotFoundException => (
-            StatusCodes.Status404NotFound,
-            "NotFound",
-            exception.Message ?? "当前KEY没有找到"
-            ),
+            DbUpdateException dbUpdateEx when dbUpdateEx.InnerException is PostgresException pgEx => pgEx.SqlState switch
+            {
+                "23505" =>(
+                    StatusCodes.Status409Conflict,
+                    "Data Conflict",
+                    "您提交的数据在系统中已存在（编码、工号或条码重复），请检查后重试."
+                ),
+                "23503" =>(
+                    StatusCodes.Status400BadRequest,
+                    "Data Association Error",
+                    "操作失败：由于关联的数据（如用户、设备或工艺）已被引用，无法执行此操作."
+                ),
+                _ =>(
+                    StatusCodes.Status400BadRequest,
+                    "Database Constraint Violation",
+                    $"数据库约束冲突：{pgEx.MessageText}"
+                )
+            },
             _ => (
             StatusCodes.Status500InternalServerError,
             "Internal Server Error",
             "系统内部错误，请联系管理员."
             )
         };
-        if (exception is UnauthorizedAccessException)
-        {
-            statusCode = StatusCodes.Status401Unauthorized;
-        }
         httpContext.Response.StatusCode = statusCode;
         httpContext.Response.ContentType = "application/json";
         var problemDetails = new ProblemDetails

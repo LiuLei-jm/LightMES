@@ -10,6 +10,8 @@ public class WorkOrderProcessConfiguation : IEntityTypeConfiguration<WorkOrderSt
     {
         builder.ToTable("WorkOrderStepProgresses");
         builder.HasKey(p => p.Id);
+        builder.Property(p => p.Version)
+            .IsRowVersion();
         builder.Property(p => p.WorkOrderId)
             .IsRequired();
         builder.Property(p => p.StepId)

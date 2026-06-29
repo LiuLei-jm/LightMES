@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LightMES.Application.Features.Routes.Dtos;
+﻿namespace LightMES.Application.Features.Routes.Dtos;
 
 public record RouteListDto(
     Guid Id,

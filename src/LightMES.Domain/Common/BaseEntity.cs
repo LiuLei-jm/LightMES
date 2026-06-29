@@ -3,6 +3,7 @@
 public abstract class BaseEntity
 {
     public Guid Id { get; protected set; } = default!;
+    public uint Version { get; private set; }
 }
 public abstract class AuditableEntity : BaseEntity
 {
